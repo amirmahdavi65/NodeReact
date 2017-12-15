@@ -26,7 +26,8 @@ passport.use(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback'
+      callbackURL: '/auth/google/callback',
+      proxy: true // tell google strategy to trust the proxy
     },
     // done is the object passport expects us to call when done!
     (accessToken, refreshToken, profile, done) => {
