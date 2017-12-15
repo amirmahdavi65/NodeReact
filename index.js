@@ -1,38 +1,41 @@
-const express = require ('express');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const express = require('express');
+const mongoose = require('mongoose');
+
+// this lib puts session itself in cookie, express-session puts a reference
+// and the actual session is stored in a remote database
+// this is 4K limited but exp-session has unlimited space on our database
+// have a look at it later
+const cookieSession = require('cookie-session');
+
+const passport = require('passport'); // this is the library
 const keys = require('./config/keys');
 
-const app = express(); // creates a single express application
+// this should always become before the following line to avoid errors
+// cuz passport depends on it, otherwise app will crash
+require('./models/User');
 
-// this strategy injects an object with 'google' identifier
-// so passport knows how to authenticate using this id below
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback'
-    },
-    (accessToken, refreshToken, profile, done) => {
-      console.log('access token', accessToken);
-      console.log('refresh token', refreshToken);
-      console.log('profile', profile);
-    }
-  )
+// don't need to assign it to any variable
+// just need to execute once
+require('./services/passport');
+
+mongoose.connect(keys.mongoURI);
+
+// creates a single express application
+const app = express();
+
+
+// cookie session library attaches the cookie mechanism to the pipeline
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000, // last 30 days
+    keys: [keys.cookieKey]
+  })
 );
+// pulls user id out of cookie data, not quite precise???
+app.use(passport.initialize());
+app.use(passport.session());
 
-// use google strategy to handle this route and authenticate
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-  scope: ['profile', 'email']
-}));
-
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google')
-);
+require('./routes/authRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
