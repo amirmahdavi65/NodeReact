@@ -30,21 +30,18 @@ passport.use(
       proxy: true // tell google strategy to trust the proxy
     },
     // done is the object passport expects us to call when done!
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // find is a promise to the found object not the actual one
-      User.findOne({ googleId: profile.id })
-        .then((existingUser) => {
-          if (existingUser) {
-            // first arg is error object, second is success result
-            done(null, existingUser);
-          }
-          else {
-            // google's unique identifier for users, remember email is not a good option cuz it could change
-            new User({ googleId: profile.id })
-              .save()
-              .then(user => done(null, user));
-          }
-        });
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        // first arg is error object, second is success result
+        done(null, existingUser);
+      }
+
+      // google's unique identifier for users, remember email is not a good option cuz it could change
+      const user = await new User({ googleId: profile.id }).save();
+      done(null, user);
     }
   )
 );
