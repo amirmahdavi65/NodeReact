@@ -18,7 +18,7 @@ require('./models/User');
 // just need to execute once
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI);
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
 
 // creates a single express application
 const app = express();
