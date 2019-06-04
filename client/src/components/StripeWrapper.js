@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 import { connect } from 'react-redux';
-import { handleToken } from '../actions';
+import * as actions from '../actions';
 
 class StripeWrapper extends Component {
   render() {
@@ -22,5 +22,5 @@ class StripeWrapper extends Component {
 
 export default connect(
   null,
-  handleToken
+  actions
 )(StripeWrapper);
