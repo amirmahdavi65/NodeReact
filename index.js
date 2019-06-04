@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 
 const passport = require('passport'); // this is the library
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 // this should always become before the following line to avoid errors
@@ -23,6 +24,8 @@ mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
 // creates a single express application
 const app = express();
 
+// apply a new middle-ware to access body
+app.use(bodyParser.json());
 
 // cookie session library attaches the cookie mechanism to the pipeline
 app.use(
@@ -36,6 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
