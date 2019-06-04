@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
+import { connect } from 'react-redux';
+import { handleToken } from '../actions';
 
 class StripeWrapper extends Component {
   render() {
@@ -8,7 +10,7 @@ class StripeWrapper extends Component {
         name="ServX"
         description="Buy credits for surveys"
         amount={500}
-        token={token => console.log(token)}
+        token={token => this.props.handleToken(token)}
         /* using public key for test to avoid tax issues */
         stripeKey={process.env.REACT_APP_STRIPE_KEY}
       >
@@ -18,4 +20,7 @@ class StripeWrapper extends Component {
   }
 }
 
-export default StripeWrapper;
+export default connect(
+  null,
+  handleToken
+)(StripeWrapper);
