@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 // mongo is schema less but mongoose requires us to define it
 const userSchema = new Schema({
-  googleId: String
+  googleId: String,
+  credits: { type: Number, default: 0 }
 });
 
 // tell mongo to create the schema using collection name and schema
