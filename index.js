@@ -14,6 +14,7 @@ const keys = require('./config/keys');
 // this should always become before the following line to avoid errors
 // cuz passport depends on it, otherwise app will crash
 require('./models/User');
+require('./models/Survey');
 
 // don't need to assign it to any variable
 // just need to execute once
