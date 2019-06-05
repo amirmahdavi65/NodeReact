@@ -42,6 +42,7 @@ app.use(passport.session());
 // every request will sequentially try the following checks until it's served
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
   // express serves up production assets
