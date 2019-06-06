@@ -14,6 +14,7 @@ const keys = require('./config/keys');
 // this should always become before the following line to avoid errors
 // cuz passport depends on it, otherwise app will crash
 require('./models/User');
+require('./models/Survey');
 
 // don't need to assign it to any variable
 // just need to execute once
@@ -41,6 +42,7 @@ app.use(passport.session());
 // every request will sequentially try the following checks until it's served
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
   // express serves up production assets
