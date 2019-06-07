@@ -3,19 +3,13 @@ import { reduxForm, Field } from 'redux-form';
 import { Link } from 'react-router-dom';
 import SurveyField from './SurveyField';
 import validateEmails from '../../utils/validateEmails';
-
-const fields = [
-  { label: 'Survey Title', name: 'title' },
-  { label: 'Subject Line', name: 'subject' },
-  { label: 'Email Body', name: 'body' },
-  { label: 'Recipient List', name: 'emails' }
-];
+import formFields from './formFields';
 
 class SurveyForm extends Component {
   renderFields() {
     return (
       <div>
-        {fields.map((item, index) => (
+        {formFields.map((item, index) => (
           <Field key={index} type="text" component={SurveyField} {...item} />
         ))}
       </div>
@@ -43,7 +37,7 @@ function validate(values) {
 
   errors.emails = validateEmails(values.emails || '');
 
-  fields.forEach(({ name }) => {
+  formFields.forEach(({ name }) => {
     if (!values[name]) {
       errors[name] = 'Please provide a value';
     }
@@ -52,4 +46,8 @@ function validate(values) {
   return errors;
 }
 
-export default reduxForm({ validate, form: 'surveyForm', destroyOnUnmount: false })(SurveyForm);
+export default reduxForm({
+  validate,
+  form: 'surveyForm' /* this is the object name in redux store to access form values */,
+  destroyOnUnmount: false /* to preserve form values when returning from review page */
+})(SurveyForm);
